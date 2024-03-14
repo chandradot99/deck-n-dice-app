@@ -1,14 +1,18 @@
 import Image from "next/image";
-import { ChessPieceType, pieceMap } from "../types/chess-piece";
+import { ChessPieceType } from "../types/chess-piece";
 import { useDrag } from "react-dnd";
-import { ItemTypes } from "./Board";
 import clsx from "clsx";
 
-export default function ChessPiece({ piece }: { piece: ChessPieceType | null }) {
+type ChessPieceProps = {
+  piece: ChessPieceType | null;
+};
+
+export default function ChessPiece({ piece }: ChessPieceProps) {
   const [{isDragging}, drag, dragPreview] = useDrag(() => ({
-    type: ItemTypes.KNIGHT,
+    type: "ChessPiece",
+    item: piece,
     collect: monitor => ({
-      isDragging: !!monitor.isDragging(),
+      isDragging: !!monitor.isDragging()
     }),
   }), [piece])
 
@@ -32,7 +36,7 @@ export default function ChessPiece({ piece }: { piece: ChessPieceType | null }) 
               }
             )}
             style={{ zIndex: 100 }}
-            src={`https://images.chesscomfiles.com/chess-themes/pieces/wood/150/${pieceMap[piece?.identifier]}.png`}
+            src={`https://images.chesscomfiles.com/chess-themes/pieces/wood/150/${piece.name}.png`}
             alt="Piece"
             width={150}
             height={150}

@@ -1,21 +1,23 @@
 import clsx from "clsx";
 import { useDrop } from "react-dnd";
-import { ItemTypes } from "./Board";
 import React from "react";
 
 type SquareProps = {
   name: string,
   type: string,
-  onPieceDrop: (name: string) => void,
+  onPieceDrop: (from: string, to: string) => boolean,
   children?: React.ReactNode
 };
 
 export default function Square({ name, type, children, onPieceDrop }: SquareProps) {
-  const [{ isOver }, drop] = useDrop(() => ({
-    accept: ItemTypes.KNIGHT,
-    drop: () => onPieceDrop(name),
+  const [{ isOver, item }, drop] = useDrop(() => ({
+    accept: "ChessPiece",
+    drop: (item) => {
+      onPieceDrop(item.currentPosition, name);
+    },
     collect: (monitor) => ({
-      isOver: !!monitor.isOver()
+      isOver: !!monitor.isOver(),
+      item: monitor.getItem()
     })
   }), [name])
 

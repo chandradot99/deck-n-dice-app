@@ -5,9 +5,10 @@ import clsx from "clsx";
 
 type ChessPieceProps = {
   piece: ChessPieceType | null;
+  canPlay: boolean;
 };
 
-export default function ChessPiece({ piece }: ChessPieceProps) {
+export default function ChessPiece({ piece, canPlay }: ChessPieceProps) {
   const [{isDragging}, drag, dragPreview] = useDrag(() => ({
     type: "ChessPiece",
     item: piece,
@@ -28,13 +29,14 @@ export default function ChessPiece({ piece }: ChessPieceProps) {
           <div className="cursor-pointer" ref={dragPreview}></div>
         ) : (
           <Image
-            ref={drag}
+            ref={canPlay ? drag : null}
             className={clsx(
               "w-full h-full absolute cursor-pointer",
               {
                 "opacity-0": isDragging
               }
             )}
+            draggable={canPlay}
             style={{ zIndex: 100 }}
             src={`https://images.chesscomfiles.com/chess-themes/pieces/wood/150/${piece.name}.png`}
             alt="Piece"

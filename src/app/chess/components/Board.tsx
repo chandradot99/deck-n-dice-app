@@ -11,9 +11,10 @@ import ChessPiece from "./Piece";
 type ChessBoardProps = {
   board: ({ square: string; type: string; color: string; } | null)[][];
   movePiece: (move: Object | string) => boolean;
+  canPlay: boolean;
 };
 
-export default function ChessBoard({ board, movePiece }: ChessBoardProps) {
+export default function ChessBoard({ board, movePiece, canPlay }: ChessBoardProps) {
   const [squares, setSquares] = React.useState<ChessSquare[]>([]);
   const [blackMove, setBlackMove] = React.useState<string>("");
 
@@ -61,10 +62,6 @@ export default function ChessBoard({ board, movePiece }: ChessBoardProps) {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div>
-        <input type="text" onChange={(event) => { setBlackMove(event.target.value) }} />
-        <button onClick={() => movePiece(blackMove)}>Play</button>  
-      </div>
       <div className="flex flex-wrap h-full aspect-square">
         {
           squares.map(({ squareName, color, piece }) => {
@@ -72,7 +69,7 @@ export default function ChessBoard({ board, movePiece }: ChessBoardProps) {
 
             return (
               <Square key={key} onPieceDrop={(from, to) => movePiece({ from, to })}  name={squareName} type={color}>
-                <ChessPiece piece={piece} />
+                <ChessPiece piece={piece} canPlay={canPlay} />
               </Square>
             );
           })

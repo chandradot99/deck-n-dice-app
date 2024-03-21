@@ -1,13 +1,27 @@
-'use client';
+import Image from "next/image";
+import SignupForm from './components/signupForm';
 
-import React from "react";
-
-export default function SignUp() {
-  return (
-    <main className="flex w-screen h-screen flex-col items-center justify-between p-24">
-      <div>
-
-      </div>
-    </main>
-  );
+interface UserData {
+  username: string;
+  password: string;
 }
+
+function Signup(): JSX.Element {
+  return (
+    <main className="flex w-screen h-screen">
+      <div className="relative hidden w-0 flex-1 lg:block">
+        <Image
+          className="absolute inset-0 h-full w-full object-cover"
+          src="/images/banner.jpeg"
+          alt=""
+          width={1500}
+          height={1500}
+          priority
+        />
+      </div>
+      <SignupForm></SignupForm>
+    </main>
+  )
+}
+
+export default Signup;

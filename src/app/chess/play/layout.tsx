@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./../../globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
+import AppLayout from "@/app/ui/layouts/appLayout";
 
 export const metadata: Metadata = {
-  title: "Chess Page"
+  title: "Play Chess"
 };
 
 export default function ChessPageLayout({
@@ -14,8 +11,8 @@ export default function ChessPageLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
-    </html>
+    <AppLayout>
+      {children}
+    </AppLayout>
   );
 }

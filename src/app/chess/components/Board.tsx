@@ -7,34 +7,34 @@ import Square from "./square";
 import { ChessSquare } from "../types/chess-square";
 import { ChessPieceType } from "../types/chess-piece";
 import ChessPiece from "./Piece";
+import { reverse, map } from "lodash";
 
 type ChessBoardProps = {
   board: ({ square: string; type: string; color: string; } | null)[][];
   movePiece: (move: Object | string) => boolean;
   canPlay: boolean;
+  flipBoard?: boolean;
 };
 
-export default function ChessBoard({ board, movePiece, canPlay }: ChessBoardProps) {
+export default function ChessBoard({ board, movePiece, canPlay, flipBoard = false }: ChessBoardProps) {
   const [squares, setSquares] = React.useState<ChessSquare[]>([]);
   const [blackMove, setBlackMove] = React.useState<string>("");
 
   const setupBoard = React.useCallback(() => {
     const chessSquares: ChessSquare[] = [];
-    const ranks = [8, 7, 6, 5, 4, 3, 2, 1];
-    const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+    const ranks = flipBoard ? [1, 2, 3, 4, 5, 6, 7, 8] : [8, 7, 6, 5, 4, 3, 2, 1];
+    const files = flipBoard ? ['h', 'g', 'f', 'e', 'd', 'c', 'b', 'a'] : ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 
     // Create squares with initial state
     ranks.forEach((rank, index) => {
-      // console.log("board", board);
-
-      const rankPiecesPosition = board[index];
+      const rankPiecesPosition =  flipBoard ? board[7 - index] : board[index];
 
       files.forEach((file, index) => {
         const squareName = file + rank;
         const type = ((rank + file.charCodeAt(0)) % 2 === 0) ? "light" : "dark";
         let piece: ChessPieceType | null = null;
 
-        const piecePosition = rankPiecesPosition[index];
+        const piecePosition = flipBoard ? rankPiecesPosition[7 - index] : rankPiecesPosition[index];
 
         if(piecePosition) {
           piece = {
@@ -54,7 +54,7 @@ export default function ChessBoard({ board, movePiece, canPlay }: ChessBoardProp
     })
 
     setSquares(chessSquares);
-  }, [board]);
+  }, [board, flipBoard]);
 
   React.useEffect(() => {
     setupBoard();
@@ -62,7 +62,7 @@ export default function ChessBoard({ board, movePiece, canPlay }: ChessBoardProp
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="flex flex-wrap h-full aspect-square">
+      <div className="h-full aspect-square rounded-lg flex flex-wrap">
         {
           squares.map(({ squareName, color, piece }) => {
             const key = `${squareName}${piece?.name || ""}`;

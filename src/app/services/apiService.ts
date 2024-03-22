@@ -7,23 +7,41 @@ interface RequestHeaders {
 class ApiService {
   private readonly baseUrl: string;
 
-  constructor(baseUrl: string) {
-    this.baseUrl = baseUrl;
+  constructor() {
+    this.baseUrl = "http://localhost:4000/api";
   }
 
-  async request<T>(
-    method: string,
-    url: string,
-    data: any = {},
-    headers: RequestHeaders = {}
-  ): Promise<T> {
+  async get<T>(url: string, headers: RequestHeaders = {}): Promise<T> {
     const response = await fetch(`${this.baseUrl}${url}`, {
-      method,
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${this.getToken()}`,
         ...headers,
       },
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error(`API request failed with status ${response.status}`);
+    }
+
+    return (await response.json()) as T;
+  }
+
+  async post<T>(
+    url: string,
+    data: any,
+    headers: RequestHeaders = {}
+  ): Promise<T> {
+    const response = await fetch(`${this.baseUrl}${url}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${this.getToken()}`,
+        ...headers,
+      },
+      credentials: "include",
       body: JSON.stringify(data),
     });
 
@@ -34,26 +52,49 @@ class ApiService {
     return (await response.json()) as T;
   }
 
-  get<T>(url: string): Promise<T> {
-    return this.request<T>("GET", url);
+  async put<T>(
+    url: string,
+    data: any,
+    headers: RequestHeaders = {}
+  ): Promise<T> {
+    const response = await fetch(`${this.baseUrl}${url}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${this.getToken()}`,
+        ...headers,
+      },
+      credentials: "include",
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error(`API request failed with status ${response.status}`);
+    }
+
+    return (await response.json()) as T;
   }
 
-  post<T>(url: string, data: any): Promise<T> {
-    return this.request<T>("POST", url, data);
-  }
+  async delete<T>(url: string, headers: RequestHeaders = {}): Promise<T> {
+    const response = await fetch(`${this.baseUrl}${url}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${this.getToken()}`,
+        ...headers,
+      },
+      credentials: "include",
+    });
 
-  put<T>(url: string, data: any): Promise<T> {
-    return this.request<T>("PUT", url, data);
-  }
+    if (!response.ok) {
+      throw new Error(`API request failed with status ${response.status}`);
+    }
 
-  delete<T>(url: string): Promise<T> {
-    return this.request<T>("DELETE", url);
+    return (await response.json()) as T;
   }
 
   getToken(): string | null {
-    // Implement logic to retrieve auth token from cookies, local storage, etc.
-    // Replace with your specific logic
-    return null;
+    return localStorage.getItem("auth_token");
   }
 }
 

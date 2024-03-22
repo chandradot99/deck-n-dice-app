@@ -3,6 +3,8 @@
 import React from "react";
 import { Chess, SQUARES } from 'chess.js';
 import ChessBoard from "../components/Board";
+import GamePageLayout from "@/app/ui/layouts/gamePageLayout";
+import CreateGame from "../components/CreateGame";
 
 export default function ChessPlay({ params }: { params: { game_id: string } }) {
 
@@ -10,8 +12,14 @@ export default function ChessPlay({ params }: { params: { game_id: string } }) {
   const [board, _setBoard] = React.useState(chess.board());
 
   return (
-    <main className="flex w-screen h-screen flex-col items-center justify-between p-24">
-      <ChessBoard board={board} movePiece={(_move) => { return false }} canPlay={false} />
-    </main>
+    <GamePageLayout
+      gamePlaySection={
+        <ChessBoard board={board} movePiece={(_move) => { return false }} canPlay={false} />
+      }
+      gameOptionsSection={
+        <CreateGame />
+      }
+    >
+    </GamePageLayout>
   );
 }

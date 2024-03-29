@@ -5,6 +5,7 @@ import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import GameService from "@/app/services/gameService";
 import { useRouter } from "next/navigation";
+import { useAuthContext } from "@/app/context/authContext";
 
 
 const timeControlOptions = [
@@ -25,6 +26,7 @@ export default function CreateGame() {
   const [timeControl, selectTimeControl] = React.useState(timeControlOptions[0]);
   const [playAs, setPlayAs] = React.useState<string>("white");
   const router = useRouter();
+  const { authState } = useAuthContext();
   
   const createNewGame = React.useCallback(async () => {
     const gameService = new GameService();
@@ -34,7 +36,6 @@ export default function CreateGame() {
       status: "created",
       min_players: 2,
       max_palyers: 2,
-      created_by: "6016d4fd-81bb-4ce0-a205-9c98ae668532",
       game_time_control_setting: {
         enable_per_player_timer: true,
         per_player_time_seconds: timeControl.value

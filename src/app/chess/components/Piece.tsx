@@ -37,7 +37,7 @@ export default function ChessPiece({ piece, canPlay }: ChessPieceProps) {
               }
             )}
             draggable={canPlay}
-            style={{ zIndex: 100 }}
+            style={{ zIndex: 10 }}
             src={`https://images.chesscomfiles.com/chess-themes/pieces/wood/150/${piece.name}.png`}
             alt="Piece"
             width={150}

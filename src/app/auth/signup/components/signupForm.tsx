@@ -1,16 +1,23 @@
 'use client'
 
+import { useAuthContext } from '@/app/context/authContext';
 import AuthService from '@/app/services/authService';
 import React, { useState } from 'react';
-import Image from "next/image";
 
 interface UserData {
   username: string;
   password: string;
   confirmPassowrd: string;
-}
+};
 
-function SignupForm(): JSX.Element {
+type SignupFormProps = {
+  onLogin: () => void,
+  onClose: () => void
+};
+
+function SignupForm({ onLogin, onClose }: SignupFormProps): JSX.Element {
+  const { onLogInSucess } = useAuthContext();
+
   const [formData, setFormData] = useState<UserData>({
     username: '',
     password: '',
@@ -31,23 +38,28 @@ function SignupForm(): JSX.Element {
         username: formData.username,
         hash_password: formData.password
       });
-      console.log('Signup successful:', data);
+
+
+      onLogInSucess({
+        id: data.user.id,
+        name: data.user.name,
+        username: data.username,
+        biography: data.user.biography,
+        dob: data.user.dob,
+        gender: data.user.gender,
+        email: data.user.email
+      });
+
+      onClose();
     } catch (error) {
       setError(error.message);
     }
   };
 
   return (
-    <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+    <div className="flex flex-1 flex-col justify-center lg:flex-none">
       <div className="mx-auto w-full max-w-sm lg:w-96">
         <div>
-          <Image
-            className="h-30 w-auto rounded-full"
-            src="/images/logo.png"
-            alt="Deck N Dice"
-            width={100}
-            height={100}
-          />
           <h2 className="mt-8 text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Sign up
           </h2>
@@ -125,11 +137,10 @@ function SignupForm(): JSX.Element {
 
         <p className="mt-10 text-center text-sm text-gray-500">
           Already a member?{' '}
-          <a href="/auth/login" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+          <button onClick={onLogin} className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
             Login
-          </a>
+          </button>
         </p>
-
       </div>
     </div>
   )

@@ -49,8 +49,25 @@ class AuthService {
     return data;
   }
 
+  async verifyToken(token: string): Promise<any> {
+    const response = await fetch(`${this.baseUrl}/accounts/verify_token`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ token }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Login failed with status ${response.status}`);
+    }
+
+    const { data } = await response.json();
+    this.setToken(data.token);
+    return data;
+  }
+
   setToken(token: string | null): void {
-    debugger;
     if (token) {
       localStorage.setItem("auth_token", token);
     } else {

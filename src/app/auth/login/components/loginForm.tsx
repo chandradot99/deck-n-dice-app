@@ -1,15 +1,22 @@
 'use client'
 
+import { useAuthContext } from '@/app/context/authContext';
 import AuthService from '@/app/services/authService';
 import React, { useState } from 'react';
-import Image from "next/image";
 
 interface UserData {
   username: string;
   password: string;
 }
 
-function LoginForm(): JSX.Element {
+type LoginFormProps = {
+  onSignup: () => void,
+  onClose: () => void
+};
+
+function LoginForm({ onSignup, onClose }: LoginFormProps): JSX.Element {
+  const { onLogInSucess } = useAuthContext();
+
   const [formData, setFormData] = useState<UserData>({
     username: '',
     password: '',
@@ -29,23 +36,27 @@ function LoginForm(): JSX.Element {
         username: formData.username,
         hash_password: formData.password
       });
-      console.log('Login successful:', data);
+
+      onLogInSucess({
+        id: data.user.id,
+        name: data.user.name,
+        username: data.username,
+        biography: data.user.biography,
+        dob: data.user.dob,
+        gender: data.user.gender,
+        email: data.user.email
+      });
+
+      onClose();
     } catch (error) {
       setError(error.message);
     }
   };
 
   return (
-    <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+    <div className="flex flex-1 flex-col justify-center lg:flex-none">
       <div className="mx-auto w-full max-w-sm lg:w-96">
         <div>
-          <Image
-            className="h-30 w-auto rounded-full"
-            src="/images/logo.png"
-            alt="Deck N Dice"
-            width={100}
-            height={100}
-          />
           <h2 className="mt-8 text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Login
           </h2>
@@ -91,7 +102,7 @@ function LoginForm(): JSX.Element {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between">
+              {/* <div className="flex items-center justify-between">
                 <div className="flex items-center">
                   <input
                     id="remember-me"
@@ -109,7 +120,7 @@ function LoginForm(): JSX.Element {
                     Forgot password?
                   </a>
                 </div>
-              </div>
+              </div> */}
 
               <div>
                 <button
@@ -125,11 +136,10 @@ function LoginForm(): JSX.Element {
 
         <p className="mt-10 text-center text-sm text-gray-500">
           Not a member?{' '}
-          <a href="/auth/signup" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+          <button onClick={onSignup} className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
             Sign up
-          </a>
+          </button>
         </p>
-
       </div>
     </div>
   )

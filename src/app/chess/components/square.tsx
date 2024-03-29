@@ -30,10 +30,10 @@ export default function Square({ name, type, children, onPieceDrop }: SquareProp
         {
           "bg-[#E9E9DF]": type === "light",
           "bg-[#BB9979]": type === "dark",
-          "rounded-tl-md": name === "a8",
-          "rounded-tr-md": name === "h8",
-          "rounded-bl-md": name === "a1",
-          "rounded-br-md": name === "h1",
+          // "rounded-tl-md": name === "a8",
+          // "rounded-tr-md": name === "h8",
+          // "rounded-bl-md": name === "a1",
+          // "rounded-br-md": name === "h1",
         }
       )}
       >

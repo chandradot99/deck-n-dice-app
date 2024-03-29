@@ -1,5 +1,6 @@
 'use client'
 
+import AuthProvider from "@/app/context/authContext";
 import AppSidebar from "./appSidebar";
 
 export default function AppLayout({
@@ -8,16 +9,16 @@ export default function AppLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="flex h-screen w-screen">
-      <div className="h-full">
-        <AppSidebar></AppSidebar>
+    <AuthProvider>
+      <div className="flex h-screen w-screen">
+        <div className="h-full">
+          <AppSidebar></AppSidebar>
+        </div>
+        <div className="h-full mr-auto max-w-7xl">
+          {children}
+        </div>
       </div>
-      <div className="h-full mr-auto max-w-7xl">
-        {children}
-      </div>
-      <div>
-      </div>
-    </div>
+    </AuthProvider>
   );
 }
 
